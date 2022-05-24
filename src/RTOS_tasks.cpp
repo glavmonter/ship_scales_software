@@ -140,21 +140,21 @@ void move_snowman(void *pvParameters) // create display menu task
       u8g2. firstPage ( ) ;
     do  
     {
-      u8g2.setFont(u8g2_font_unifont_t_symbols);
-      u8g2.drawGlyph(0, step_snowman, 0x2603);
-      u8g2.setFont(u8g2_font_10x20_te);
-      u8g2.setCursor(25, 15);
-      u8g2.print("snowman");
-      u8g2.setFont(u8g2_font_10x20_te);
-      u8g2.setCursor(25, 30);
-      u8g2.print("fireman");
-      u8g2.setFont(u8g2_font_10x20_te);
-      u8g2.setCursor(25, 45);
-      u8g2.print("blowman");
-      u8g2.setFont(u8g2_font_10x20_te);
-      u8g2.setCursor(25, 60);
-      //u8g2.print("whistleman");
+      u8g2.setFont(u8g2_font_fur30_tn);
+      u8g2.setCursor(10, 45);
       u8g2.print(celcius);
+      u8g2.setFont(u8g2_font_fivepx_tr);
+      u8g2.setCursor(0, 7);
+      u8g2.print("BARCODE");
+      u8g2.setFont(u8g2_font_fivepx_tr);
+      u8g2.setCursor(0, 64);
+      u8g2.print("SAVE DATA");
+      u8g2.setFont(u8g2_font_fivepx_tr);
+      u8g2.setCursor(85, 7);
+      u8g2.print("CALIBRATE");
+      u8g2.setFont(u8g2_font_fivepx_tr);
+      u8g2.setCursor(85, 64);
+      u8g2.print("WEIGHTING");
     }
     while ( u8g2.nextPage() );
     vTaskDelay(100);
@@ -173,3 +173,11 @@ void get_temp(void *pvParameters) // get temperature from D18B20 sensor
   }
    
 }
+
+//void save_data(void *pvParameters)
+
+
+//void get_RTC_time(void *pvParameters)
+
+
+//void barcode_scanner(void *pvParameters)
