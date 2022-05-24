@@ -1,5 +1,7 @@
 #include "RTOS_tasks.h"
 #include <U8g2lib.h>
+#include <DallasTemperature.h>
+#include <OneWire.h>
 
 // scl = 14
 // si = 13
@@ -11,9 +13,15 @@ U8G2_ST7565_ERC12864_1_4W_SW_SPI u8g2 ( U8G2_R0, /* scl=*/  14 , /* si=*/  13 , 
 SemaphoreHandle_t btnSemaphore; // assign semaphore
 int step_snowman = 15;          // assign move step of menu selector
 
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+
+float celcius;
+
 void IRAM_ATTR ISR_btn() // IRAM_ATTR means, that we use RAM (wich more faster and recommended for interrupts). ISR - interrupt service routine
 {
-  xSemaphoreGiveFromISR( btnSemaphore, NULL ); // Macro to release a semaphore. The semaphore must have previously been created with a call to xSemaphoreCreateBinary() or xSemaphoreCreateCounting().
+  xSemaphoreGiveFromISR( btnSemaphore, NULL ); // Macro to release a semaphore from interruption. The semaphore must have previously been created with a call to xSemaphoreCreateBinary() or xSemaphoreCreateCounting().
 }
 
 void task_button(void *pvParameters) // create button RTOS task
@@ -121,7 +129,7 @@ void task_button(void *pvParameters) // create button RTOS task
   }
 }
 
-void move_snowman(void *pvParameters)
+void move_snowman(void *pvParameters) // create display menu task
 {
   u8g2. begin ( ) ;
   u8g2. setContrast  (10) ;
@@ -145,10 +153,23 @@ void move_snowman(void *pvParameters)
       u8g2.print("blowman");
       u8g2.setFont(u8g2_font_10x20_te);
       u8g2.setCursor(25, 60);
-      u8g2.print("whistleman");
+      //u8g2.print("whistleman");
+      u8g2.print(celcius);
     }
     while ( u8g2.nextPage() );
     vTaskDelay(100);
     }
   }
+}
+
+void get_temp(void *pvParameters) // get temperature from D18B20 sensor
+{
+  sensors.begin();
+  while (1)
+  {
+    sensors.requestTemperatures();
+    celcius = sensors.getTempCByIndex(0);
+
+  }
+   
 }

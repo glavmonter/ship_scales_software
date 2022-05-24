@@ -9,7 +9,10 @@
 #define BUTTON_LEFT 33
 #define STD_LED 2
 
+#define ONE_WIRE_BUS 4
+
 void task_button(void *pvParameters);
 void move_snowman(void *pvParameters);
+void get_temp(void *pvParameters);
 
  
