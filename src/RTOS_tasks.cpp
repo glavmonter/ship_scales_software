@@ -1,7 +1,5 @@
 #include "RTOS_tasks.h"
-#include <U8g2lib.h>
-#include <DallasTemperature.h>
-#include <OneWire.h>
+
 
 // scl = 14
 // si = 13
@@ -11,14 +9,11 @@
 U8G2_ST7565_ERC12864_1_4W_SW_SPI u8g2 ( U8G2_R0, /* scl=*/  14 , /* si=*/  13 , /* cs=*/  15 , /* rs=*/  12 , /* rse=*/  27 ) ;
 
 SemaphoreHandle_t btnSemaphore; // assign semaphore
-int step_snowman = 15;          // assign move step of menu selector
-
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+int step_snowman_vertical = 45;
+int step_snowman_horizontal = 45;          // assign move step of menu selector
 
 
-float celcius;
-
+// create function - interrupt handler
 void IRAM_ATTR ISR_btn() // IRAM_ATTR means, that we use RAM (wich more faster and recommended for interrupts). ISR - interrupt service routine
 {
   xSemaphoreGiveFromISR( btnSemaphore, NULL ); // Macro to release a semaphore from interruption. The semaphore must have previously been created with a call to xSemaphoreCreateBinary() or xSemaphoreCreateCounting().
@@ -33,20 +28,19 @@ void task_button(void *pvParameters) // create button RTOS task
   pinMode(BUTTON_UP, INPUT_PULLUP);
   pinMode(BUTTON_RIGHT, INPUT_PULLUP);
   pinMode(BUTTON_LEFT, INPUT_PULLUP);
-  pinMode(STD_LED, OUTPUT);
 
   btnSemaphore = xSemaphoreCreateBinary(); // create simple binary semaphore
 
   xSemaphoreTake(btnSemaphore, 100); // taking semaphore to avoid false trigger of the button
 
-  attachInterrupt(BUTTON_DOWN, ISR_btn, FALLING); // launch four interrupt handlers
+  attachInterrupt(BUTTON_DOWN, ISR_btn, FALLING); // launch four interrupt handlers (button short-circuit to GND)
   attachInterrupt(BUTTON_UP, ISR_btn, FALLING);
   attachInterrupt(BUTTON_RIGHT, ISR_btn, FALLING);
   attachInterrupt(BUTTON_LEFT, ISR_btn, FALLING);
 
   while (true)
   {
-    if (isISR) // 
+    if (isISR) // interrupt handlers 
     {
       xSemaphoreTake(btnSemaphore, portMAX_DELAY);
       detachInterrupt(BUTTON_DOWN);
@@ -67,11 +61,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn1 = st1;
         if (st1 == LOW)
         {
-          digitalWrite(STD_LED, HIGH);
+          step_snowman_vertical = step_snowman_vertical + 5;
+          step_snowman_horizontal = step_snowman_horizontal + 5;
         }
         else
         {
-          digitalWrite(STD_LED, LOW);
+          step_snowman_vertical = 45;
+          step_snowman_horizontal = 45;
         }
       }
 
@@ -80,11 +76,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn2 = st2;
         if (st2 == LOW)
         {
-          digitalWrite(STD_LED, HIGH);
+          step_snowman_vertical = step_snowman_vertical - 5;
+          step_snowman_horizontal = step_snowman_horizontal - 5;
         }
         else
         {
-          digitalWrite(STD_LED, LOW);
+          step_snowman_vertical = 45;
+          step_snowman_horizontal = 45;
         }
       }
 
@@ -93,13 +91,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn3 = st3;
         if (st3 == LOW)
         {
-          digitalWrite(STD_LED, HIGH);
-          step_snowman = step_snowman + 15;
+          step_snowman_vertical = step_snowman_vertical + 5;
+          step_snowman_horizontal = step_snowman_horizontal - 5;
         }
         else
         {
-          digitalWrite(STD_LED, LOW);
-          if (step_snowman == 75) step_snowman = 15;
+          step_snowman_vertical = 45;
+          step_snowman_horizontal = 45;
         }
       }
 
@@ -108,11 +106,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn4 = st4;
         if (st4 == LOW)
         {
-          digitalWrite(STD_LED, HIGH);
+          step_snowman_vertical = step_snowman_vertical - 5;
+          step_snowman_horizontal = step_snowman_horizontal + 5;
         }
         else
         {
-          digitalWrite(STD_LED, LOW);
+          step_snowman_vertical = 45;
+          step_snowman_horizontal = 45;
         }
       }
       if (st1 == HIGH && st2 == HIGH && st3 == HIGH && st4 == HIGH)
@@ -140,9 +140,11 @@ void move_snowman(void *pvParameters) // create display menu task
       u8g2. firstPage ( ) ;
     do  
     {
-      u8g2.setFont(u8g2_font_fur30_tn);
-      u8g2.setCursor(10, 45);
-      u8g2.print(celcius);
+      //u8g2.setFont(u8g2_font_fur30_tn);
+      //u8g2.setCursor(10, 45);
+      //u8g2.print(celcius);
+      u8g2.setFont(u8g2_font_unifont_t_symbols);
+      u8g2.drawGlyph(step_snowman_vertical, step_snowman_horizontal, 0x2603);
       u8g2.setFont(u8g2_font_fivepx_tr);
       u8g2.setCursor(0, 7);
       u8g2.print("BARCODE");
@@ -160,18 +162,6 @@ void move_snowman(void *pvParameters) // create display menu task
     vTaskDelay(100);
     }
   }
-}
-
-void get_temp(void *pvParameters) // get temperature from D18B20 sensor
-{
-  sensors.begin();
-  while (1)
-  {
-    sensors.requestTemperatures();
-    celcius = sensors.getTempCByIndex(0);
-
-  }
-   
 }
 
 //void save_data(void *pvParameters)
