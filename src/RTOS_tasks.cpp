@@ -9,8 +9,8 @@
 U8G2_ST7565_ERC12864_1_4W_SW_SPI u8g2 ( U8G2_R0, /* scl=*/  14 , /* si=*/  13 , /* cs=*/  15 , /* rs=*/  12 , /* rse=*/  27 ) ;
 
 SemaphoreHandle_t btnSemaphore; // assign semaphore
-int step_snowman_vertical = 45;
-int step_snowman_horizontal = 45;          // assign move step of menu selector
+int step_snowman_vertical = 50;
+int step_snowman_horizontal = 40;          // assign move step of menu selector
 
 
 // create function - interrupt handler
@@ -61,13 +61,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn1 = st1;
         if (st1 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical + 5;
-          step_snowman_horizontal = step_snowman_horizontal + 5;
+          step_snowman_vertical = step_snowman_vertical + 15;
+          step_snowman_horizontal = step_snowman_horizontal + 15;
         }
         else
         {
-          step_snowman_vertical = 45;
-          step_snowman_horizontal = 45;
+          step_snowman_vertical = 50;
+          step_snowman_horizontal = 40;
         }
       }
 
@@ -76,13 +76,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn2 = st2;
         if (st2 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical - 5;
-          step_snowman_horizontal = step_snowman_horizontal - 5;
+          step_snowman_vertical = step_snowman_vertical + 15;
+          step_snowman_horizontal = step_snowman_horizontal - 15;
         }
         else
         {
-          step_snowman_vertical = 45;
-          step_snowman_horizontal = 45;
+          step_snowman_vertical = 50;
+          step_snowman_horizontal = 40;
         }
       }
 
@@ -91,13 +91,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn3 = st3;
         if (st3 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical + 5;
-          step_snowman_horizontal = step_snowman_horizontal - 5;
+          step_snowman_vertical = step_snowman_vertical - 15;
+          step_snowman_horizontal = step_snowman_horizontal - 15;
         }
         else
         {
-          step_snowman_vertical = 45;
-          step_snowman_horizontal = 45;
+          step_snowman_vertical = 50;
+          step_snowman_horizontal = 40;
         }
       }
 
@@ -106,13 +106,13 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn4 = st4;
         if (st4 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical - 5;
-          step_snowman_horizontal = step_snowman_horizontal + 5;
+          step_snowman_vertical = step_snowman_vertical - 15;
+          step_snowman_horizontal = step_snowman_horizontal + 15;
         }
         else
         {
-          step_snowman_vertical = 45;
-          step_snowman_horizontal = 45;
+          step_snowman_vertical = 50;
+          step_snowman_horizontal = 40;
         }
       }
       if (st1 == HIGH && st2 == HIGH && st3 == HIGH && st4 == HIGH)
