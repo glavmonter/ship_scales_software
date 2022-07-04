@@ -1,3 +1,4 @@
+#include "HX711.h"
 #include <Arduino.h> 
 #include <U8g2lib.h>
 //#include <esp_task_wdt.h>
@@ -13,5 +14,6 @@
 
 void task_button(void *pvParameters);
 void move_snowman(void *pvParameters);
+void getweight(void *pvParameters);
 
  

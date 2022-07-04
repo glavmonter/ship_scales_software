@@ -1,6 +1,11 @@
 #include "RTOS_tasks.h"
 
 
+const int LOADCELL_DOUT_PIN = 32;
+const int LOADCELL_SCK_PIN = 33;
+HX711 scale;
+long reading;
+
 // scl = 14
 // si = 13
 // cs = 15
@@ -140,9 +145,9 @@ void move_snowman(void *pvParameters) // create display menu task
       u8g2. firstPage ( ) ;
     do  
     {
-      //u8g2.setFont(u8g2_font_fur30_tn);
-      //u8g2.setCursor(10, 45);
-      //u8g2.print(celcius);
+      u8g2.setFont(u8g2_font_fur30_tn);
+      u8g2.setCursor(10, 45);
+      u8g2.print(reading);
       u8g2.setFont(u8g2_font_unifont_t_symbols);
       u8g2.drawGlyph(step_snowman_vertical, step_snowman_horizontal, 0x2603);
       u8g2.setFont(u8g2_font_fivepx_tr);
@@ -162,6 +167,18 @@ void move_snowman(void *pvParameters) // create display menu task
     vTaskDelay(100);
     }
   }
+}
+
+void getweight(void *pvParameters) // get temperature from D18B20 sensor
+{
+  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  scale.set_scale(20000);
+  scale.tare(); 
+  while (1)
+  {
+    reading = scale.get_units();
+  }
+   
 }
 
 //void save_data(void *pvParameters)
