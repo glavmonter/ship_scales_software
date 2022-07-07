@@ -7,8 +7,8 @@
 
 //#define WDT_TIMEOUT 2
 
-#define BUTTON_UP 25
-#define BUTTON_DOWN 26
+#define BUTTON_UP 35
+#define BUTTON_DOWN 34
 #define BUTTON_RIGHT 2
 #define BUTTON_LEFT 4
 

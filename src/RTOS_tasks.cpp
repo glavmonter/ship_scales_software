@@ -1,8 +1,8 @@
 #include "RTOS_tasks.h"
 
 
-const int LOADCELL_DOUT_PIN = 32;
-const int LOADCELL_SCK_PIN = 33;
+const int LOADCELL_DOUT_PIN = 25;
+const int LOADCELL_SCK_PIN = 26;
 HX711 scale;
 long reading;
 
@@ -29,8 +29,8 @@ void task_button(void *pvParameters) // create button RTOS task
   bool isISR = true;
   bool state_btn1 = true, state_btn2 = true, state_btn3 = true, state_btn4 = true; // assign four buttons
   
-  pinMode(BUTTON_DOWN, INPUT_PULLUP);
-  pinMode(BUTTON_UP, INPUT_PULLUP);
+  pinMode(BUTTON_DOWN, INPUT);
+  pinMode(BUTTON_UP, INPUT);
   pinMode(BUTTON_RIGHT, INPUT_PULLUP);
   pinMode(BUTTON_LEFT, INPUT_PULLUP);
 
