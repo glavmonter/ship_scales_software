@@ -5,6 +5,10 @@ const int LOADCELL_DOUT_PIN = 25;
 const int LOADCELL_SCK_PIN = 26;
 HX711 scale;
 long reading;
+int push_barcode;
+int push_save_data;
+int push_calibrate;
+int push_weighting;
 
 // scl = 14
 // si = 13
@@ -68,11 +72,20 @@ void task_button(void *pvParameters) // create button RTOS task
         {
           step_snowman_vertical = step_snowman_vertical + 15;
           step_snowman_horizontal = step_snowman_horizontal + 15;
+          //push_barcode = 1;
+          //push_save_data = 0;
+          //push_calibrate = 0;
+          push_weighting = 1;
+
         }
         else
         {
           step_snowman_vertical = 50;
           step_snowman_horizontal = 40;
+          //push_barcode = 0;
+          //push_save_data = 0;
+          //push_calibrate = 0;
+          push_weighting = 0;
         }
       }
 
@@ -83,11 +96,19 @@ void task_button(void *pvParameters) // create button RTOS task
         {
           step_snowman_vertical = step_snowman_vertical + 15;
           step_snowman_horizontal = step_snowman_horizontal - 15;
+          //push_barcode = 0;
+          //push_save_data = 1;
+          push_calibrate = 1;
+          //push_weighting = 0;
         }
         else
         {
           step_snowman_vertical = 50;
           step_snowman_horizontal = 40;
+          //push_barcode = 0;
+          //push_save_data = 0;
+          push_calibrate = 0;
+          //push_weighting = 0;
         }
       }
 
@@ -98,11 +119,19 @@ void task_button(void *pvParameters) // create button RTOS task
         {
           step_snowman_vertical = step_snowman_vertical - 15;
           step_snowman_horizontal = step_snowman_horizontal - 15;
+          push_barcode = 1;
+          //push_save_data = 0;
+          //push_calibrate = 1;
+          //push_weighting = 0;
         }
         else
         {
           step_snowman_vertical = 50;
           step_snowman_horizontal = 40;
+          push_barcode = 0;
+          //push_save_data = 0;
+          //push_calibrate = 0;
+          //push_weighting = 0;
         }
       }
 
@@ -113,11 +142,19 @@ void task_button(void *pvParameters) // create button RTOS task
         {
           step_snowman_vertical = step_snowman_vertical - 15;
           step_snowman_horizontal = step_snowman_horizontal + 15;
+          //push_barcode = 0;
+          push_save_data = 1;
+          //push_calibrate = 0;
+          //push_weighting = 1;
         }
         else
         {
           step_snowman_vertical = 50;
           step_snowman_horizontal = 40;
+          //push_barcode = 0;
+          push_save_data = 0;
+          //push_calibrate = 0;
+          //push_weighting = 0;
         }
       }
       if (st1 == HIGH && st2 == HIGH && st3 == HIGH && st4 == HIGH)
@@ -151,14 +188,30 @@ void move_snowman(void *pvParameters) // create display menu task
       u8g2.setFont(u8g2_font_unifont_t_symbols);
       u8g2.drawGlyph(step_snowman_vertical, step_snowman_horizontal, 0x2603);
       u8g2.setFont(u8g2_font_fivepx_tr);
+      if (push_barcode == 1)
+      {
+        u8g2.drawButtonUTF8(0, 7, U8G2_BTN_INV|U8G2_BTN_BW2, 0,  2,  2, "BARCODE" );
+      }
       u8g2.setCursor(0, 7);
       u8g2.print("BARCODE");
       u8g2.setFont(u8g2_font_fivepx_tr);
+      if (push_save_data == 1)
+      {
+        u8g2.drawButtonUTF8(0, 64, U8G2_BTN_INV|U8G2_BTN_BW2, 0,  2,  2, "SAVE DATA" );
+      }
       u8g2.setCursor(0, 64);
       u8g2.print("SAVE DATA");
+      if (push_calibrate == 1)
+      {
+        u8g2.drawButtonUTF8(85, 7, U8G2_BTN_INV|U8G2_BTN_BW2, 0,  2,  2, "CALIBRATE" );
+      }
       u8g2.setFont(u8g2_font_fivepx_tr);
       u8g2.setCursor(85, 7);
       u8g2.print("CALIBRATE");
+      if (push_weighting == 1)
+      {
+        u8g2.drawButtonUTF8(85, 64, U8G2_BTN_INV|U8G2_BTN_BW2, 0,  2,  2, "WEIGHTING" );
+      }
       u8g2.setFont(u8g2_font_fivepx_tr);
       u8g2.setCursor(85, 64);
       u8g2.print("WEIGHTING");
