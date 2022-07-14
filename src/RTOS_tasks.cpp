@@ -18,9 +18,6 @@ int push_weighting;
 U8G2_ST7565_ERC12864_1_4W_SW_SPI u8g2 ( U8G2_R0, /* scl=*/  14 , /* si=*/  13 , /* cs=*/  15 , /* rs=*/  12 , /* rse=*/  27 ) ;
 
 SemaphoreHandle_t btnSemaphore; // assign semaphore
-int step_snowman_vertical = 50;
-int step_snowman_horizontal = 40;          // assign move step of menu selector
-
 
 // create function - interrupt handler
 void IRAM_ATTR ISR_btn() // IRAM_ATTR means, that we use RAM (wich more faster and recommended for interrupts). ISR - interrupt service routine
@@ -70,21 +67,10 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn1 = st1;
         if (st1 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical + 15;
-          step_snowman_horizontal = step_snowman_horizontal + 15;
-          //push_barcode = 1;
-          //push_save_data = 0;
-          //push_calibrate = 0;
           push_weighting = 1;
-
         }
         else
         {
-          step_snowman_vertical = 50;
-          step_snowman_horizontal = 40;
-          //push_barcode = 0;
-          //push_save_data = 0;
-          //push_calibrate = 0;
           push_weighting = 0;
         }
       }
@@ -94,21 +80,11 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn2 = st2;
         if (st2 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical + 15;
-          step_snowman_horizontal = step_snowman_horizontal - 15;
-          //push_barcode = 0;
-          //push_save_data = 1;
           push_calibrate = 1;
-          //push_weighting = 0;
         }
         else
         {
-          step_snowman_vertical = 50;
-          step_snowman_horizontal = 40;
-          //push_barcode = 0;
-          //push_save_data = 0;
           push_calibrate = 0;
-          //push_weighting = 0;
         }
       }
 
@@ -117,21 +93,11 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn3 = st3;
         if (st3 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical - 15;
-          step_snowman_horizontal = step_snowman_horizontal - 15;
           push_barcode = 1;
-          //push_save_data = 0;
-          //push_calibrate = 1;
-          //push_weighting = 0;
         }
         else
         {
-          step_snowman_vertical = 50;
-          step_snowman_horizontal = 40;
           push_barcode = 0;
-          //push_save_data = 0;
-          //push_calibrate = 0;
-          //push_weighting = 0;
         }
       }
 
@@ -140,21 +106,11 @@ void task_button(void *pvParameters) // create button RTOS task
         state_btn4 = st4;
         if (st4 == LOW)
         {
-          step_snowman_vertical = step_snowman_vertical - 15;
-          step_snowman_horizontal = step_snowman_horizontal + 15;
-          //push_barcode = 0;
           push_save_data = 1;
-          //push_calibrate = 0;
-          //push_weighting = 1;
         }
         else
         {
-          step_snowman_vertical = 50;
-          step_snowman_horizontal = 40;
-          //push_barcode = 0;
           push_save_data = 0;
-          //push_calibrate = 0;
-          //push_weighting = 0;
         }
       }
       if (st1 == HIGH && st2 == HIGH && st3 == HIGH && st4 == HIGH)
@@ -185,8 +141,6 @@ void move_snowman(void *pvParameters) // create display menu task
       u8g2.setFont(u8g2_font_fur30_tn);
       u8g2.setCursor(10, 45);
       u8g2.print(reading);
-      u8g2.setFont(u8g2_font_unifont_t_symbols);
-      u8g2.drawGlyph(step_snowman_vertical, step_snowman_horizontal, 0x2603);
       u8g2.setFont(u8g2_font_fivepx_tr);
       if (push_barcode == 1)
       {
