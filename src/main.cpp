@@ -7,7 +7,8 @@ void setup ( void )
   //esp_task_wdt_reset();
   xTaskCreate(task_button, "buttons", 4096, NULL, 2, NULL);
   xTaskCreate(move_snowman, "move_snowman", 4096, NULL, 2, NULL);
-  xTaskCreate(getweight, "getweight", 4096, NULL, 2, NULL);
+  xTaskCreate(getweight1, "getweight1", 4096, NULL, 2, NULL);
+  xTaskCreate(getweight2, "getweight2", 4096, NULL, 2, NULL);
 }
  
 void loop ( void )  

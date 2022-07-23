@@ -185,19 +185,27 @@ void move_snowman(void *pvParameters) // create display menu task
   }
 }
 
-void getweight(void *pvParameters)
+void getweight1(void *pvParameters)
 {
   scale1.begin(LOADCELL1_DOUT_PIN, LOADCELL1_SCK_PIN);
   scale1.set_scale(20000);
   scale1.tare();
 
+  while (1)
+  {
+    reading1 = scale1.get_units();
+  }
+   
+}
+
+void getweight2(void *pvParameters)
+{
   scale2.begin(LOADCELL2_DOUT_PIN, LOADCELL2_SCK_PIN);
   scale2.set_scale(20000);
   scale2.tare();
 
   while (1)
   {
-    reading1 = scale1.get_units();
     reading2 = scale2.get_units();
   }
    
