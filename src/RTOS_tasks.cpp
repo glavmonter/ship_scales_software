@@ -1,10 +1,14 @@
 #include "RTOS_tasks.h"
 
 
-const int LOADCELL_DOUT_PIN = 25;
-const int LOADCELL_SCK_PIN = 26;
-HX711 scale;
-long reading;
+const int LOADCELL1_DOUT_PIN = 25;
+const int LOADCELL1_SCK_PIN = 26;
+const int LOADCELL2_DOUT_PIN = 32;
+const int LOADCELL2_SCK_PIN = 33;
+HX711 scale1;
+HX711 scale2;
+long reading1;
+long reading2;
 int push_barcode;
 int push_save_data;
 int push_calibrate;
@@ -140,7 +144,12 @@ void move_snowman(void *pvParameters) // create display menu task
     {
       u8g2.setFont(u8g2_font_fur30_tn);
       u8g2.setCursor(10, 45);
-      u8g2.print(reading);
+      u8g2.print(reading1);
+
+      u8g2.setFont(u8g2_font_fur30_tn);
+      u8g2.setCursor(60, 45);
+      u8g2.print(reading2);
+
       u8g2.setFont(u8g2_font_fivepx_tr);
       if (push_barcode == 1)
       {
@@ -176,22 +185,20 @@ void move_snowman(void *pvParameters) // create display menu task
   }
 }
 
-void getweight(void *pvParameters) // get temperature from D18B20 sensor
+void getweight(void *pvParameters)
 {
-  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-  scale.set_scale(20000);
-  scale.tare(); 
+  scale1.begin(LOADCELL1_DOUT_PIN, LOADCELL1_SCK_PIN);
+  scale1.set_scale(20000);
+  scale1.tare();
+
+  scale2.begin(LOADCELL2_DOUT_PIN, LOADCELL2_SCK_PIN);
+  scale2.set_scale(20000);
+  scale2.tare();
+
   while (1)
   {
-    reading = scale.get_units();
+    reading1 = scale1.get_units();
+    reading2 = scale2.get_units();
   }
    
 }
-
-//void save_data(void *pvParameters)
-
-
-//void get_RTC_time(void *pvParameters)
-
-
-//void barcode_scanner(void *pvParameters)
