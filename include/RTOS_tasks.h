@@ -12,8 +12,9 @@
 #define BUTTON_RIGHT 2
 #define BUTTON_LEFT 4
 
+void start_screen(void *pvParameters);
 void task_button(void *pvParameters);
-void move_snowman(void *pvParameters);
+void show_display(void *pvParameters);
 void getweight1(void *pvParameters);
 void getweight2(void *pvParameters);
 
