@@ -15,12 +15,10 @@ int push_save_data;
 int push_calibrate;
 int push_weighting;
 
-// scl = 14
-// si = 13
-// cs = 15
-// rs = 12
-// rse = 27
+// PINOUT: scl = 14 // si = 13 // cs = 15 // rs = 12 // rse = 27
 U8G2_ST7565_ERC12864_1_4W_SW_SPI u8g2 ( U8G2_R0, /* scl=*/  14 , /* si=*/  13 , /* cs=*/  15 , /* rs=*/  12 , /* rse=*/  27 ) ;
+
+void start_page();
 
 SemaphoreHandle_t btnSemaphore; // assign semaphore
 
@@ -142,35 +140,15 @@ void show_display(void *pvParameters) // create display menu task
   int i = 0;
   while (true)
   {
+    if (i < 1)
     {
-      u8g2. firstPage ( ) ;
+      start_page();
+      vTaskDelay(5000);
+      i++;
+    }
+    u8g2. firstPage ( ) ;
     do  
     {
-      if (i < 1)
-      {
-        u8g2. firstPage ( ) ;
-        do
-        {
-          u8g2.setFont(u8g2_font_t0_16b_tf);
-          u8g2.setCursor(10, 15);
-          u8g2.print("Digital Marine");
-          u8g2.setFont(u8g2_font_t0_16b_tf);
-          u8g2.setCursor(15, 30);
-          u8g2.print("Balances 100g");
-          u8g2.setFont(u8g2_font_fivepx_tr);
-          u8g2.setCursor(5, 45);
-          u8g2.print("Institute of Oceanology RAS");
-          u8g2.setFont(u8g2_font_fivepx_tr);
-          u8g2.setCursor(50, 53);
-          u8g2.print("2022");
-          u8g2.setFont(u8g2_font_fivepx_tr);
-          u8g2.setCursor(25, 61);
-          u8g2.print("t.me/coreblogger");
-        }
-        while ( u8g2.nextPage() );
-        vTaskDelay(5000);
-        i++;
-      }
       u8g2.setFont(u8g2_font_7x13B_tf);
       u8g2.setCursor(5, 25);
       u8g2.print(reading1, 5);
@@ -215,7 +193,6 @@ void show_display(void *pvParameters) // create display menu task
     }
     while ( u8g2.nextPage() );
     vTaskDelay(100);
-    }
   }
 }
 
@@ -245,4 +222,28 @@ void getweight2(void *pvParameters)
     vTaskDelay(250);
   }
    
+}
+
+void start_page()
+{
+  u8g2. firstPage ( ) ;
+  do
+  {
+    u8g2.setFont(u8g2_font_t0_16b_tf);
+    u8g2.setCursor(10, 15);
+    u8g2.print("Digital Marine");
+    u8g2.setFont(u8g2_font_t0_16b_tf);
+    u8g2.setCursor(15, 30);
+    u8g2.print("Balances 100g");
+    u8g2.setFont(u8g2_font_fivepx_tr);
+    u8g2.setCursor(5, 45);
+    u8g2.print("Institute of Oceanology RAS");
+    u8g2.setFont(u8g2_font_fivepx_tr);
+    u8g2.setCursor(50, 53);
+    u8g2.print("2022");
+    u8g2.setFont(u8g2_font_fivepx_tr);
+    u8g2.setCursor(25, 61);
+    u8g2.print("t.me/coreblogger");
+  }
+  while ( u8g2.nextPage() );
 }
